@@ -1,0 +1,141 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\User;
+use App\Models\Kategori;
+use App\Models\Event;
+use App\Models\Tiket;
+use App\Models\Order;
+use App\Models\DetailOrder;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+
+class DatabaseSeeder extends Seeder
+{
+    public function run(): void
+    {
+        // 1. Buat User (Admin & User Biasa)
+        // User ID 1 = Admin (Pembuat Event)
+        $admin = User::create([
+            'name' => 'Admin',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('password'),
+            'role' => 'admin',
+            'no_hp' => '081234567890'
+        ]);
+
+        // User ID 2 = User Pembeli (Yang melakukan Order)
+        $user = User::create([
+            'name' => 'User Customer',
+            'email' => 'user@gmail.com',
+            'password' => Hash::make('password'),
+            'role' => 'user',
+            'no_hp' => '089876543210'
+        ]);
+
+        // 2. Buat Kategori
+        $catMusik = Kategori::create(['nama' => 'Musik']);
+        $catSeni = Kategori::create(['nama' => 'Seni']);
+        $catFestival = Kategori::create(['nama' => 'Festival']);
+        // Note: Di screenshot ada 'Workshop', mungkin itu kategori ke-4, tapi kita pakai 3 ini dulu sesuai event.
+
+        // 3. Buat Event (Sesuai Screenshot Modul)
+        // Event ID 1
+        $event1 = Event::create([
+            'user_id' => $admin->id,
+            'kategori_id' => $catMusik->id,
+            'judul' => 'Konser Musik Rock',
+            'deskripsi' => 'Nikmati malam penuh energi dengan band rock ternama.',
+            'lokasi' => 'Stadion Utama',
+            'tanggal_waktu' => '2024-08-15 19:00:00',
+            'gambar' => 'events/konser_rock.jpg'
+        ]);
+
+        // Event ID 2
+        $event2 = Event::create([
+            'user_id' => $admin->id,
+            'kategori_id' => $catSeni->id,
+            'judul' => 'Pameran Seni Kontemporer',
+            'deskripsi' => 'Jelajahi karya seni modern dari seniman lokal dan internasional.',
+            'lokasi' => 'Galeri Seni Kota',
+            'tanggal_waktu' => '2024-05-10 10:00:00',
+            'gambar' => 'events/pameran_seni.jpg'
+        ]);
+
+        // Event ID 3
+        $event3 = Event::create([
+            'user_id' => $admin->id,
+            'kategori_id' => $catFestival->id,
+            'judul' => 'Festival Makanan Internasional',
+            'deskripsi' => 'Cicipi berbagai hidangan lezat dari seluruh dunia.',
+            'lokasi' => 'Taman Kota',
+            'tanggal_waktu' => '2024-10-05 12:00:00',
+            'gambar' => 'events/festival_makanan.jpg'
+        ]);
+
+        // 4. Buat Tiket (Sesuai Screenshot Modul)
+        // Tiket ID 1 (Event 1 - Premium)
+        $tiket1 = Tiket::create([
+            'event_id' => $event1->id,
+            'tipe' => 'premium',
+            'harga' => 1500000,
+            'stok' => 100
+        ]);
+
+        // Tiket ID 2 (Event 1 - Reguler)
+        Tiket::create([
+            'event_id' => $event1->id,
+            'tipe' => 'reguler',
+            'harga' => 500000,
+            'stok' => 500
+        ]);
+
+        // Tiket ID 3 (Event 2 - Premium)
+        $tiket3 = Tiket::create([
+            'event_id' => $event2->id,
+            'tipe' => 'premium',
+            'harga' => 200000,
+            'stok' => 300
+        ]);
+
+        // Tiket ID 4 (Event 3 - Premium)
+        Tiket::create([
+            'event_id' => $event3->id,
+            'tipe' => 'premium',
+            'harga' => 300000,
+            'stok' => 200
+        ]);
+
+        // 5. Buat Order (Sesuai Screenshot Modul)
+        // Order ID 1: User 2 beli Tiket Event 1
+        $order1 = Order::create([
+            'user_id' => $user->id,
+            'event_id' => $event1->id,
+            'order_date' => '2024-07-01 14:30:00',
+            'total_harga' => 1500000
+        ]);
+        // Detail Order 1
+        DetailOrder::create([
+            'order_id' => $order1->id,
+            'tiket_id' => $tiket1->id, // Beli tiket premium event 1
+            'jumlah' => 1,
+            'subtotal_harga' => 1500000
+        ]);
+
+        // Order ID 2: User 2 beli Tiket Event 2
+        $order2 = Order::create([
+            'user_id' => $user->id,
+            'event_id' => $event2->id,
+            'order_date' => '2024-07-02 10:15:00',
+            'total_harga' => 200000
+        ]);
+        // Detail Order 2
+        DetailOrder::create([
+            'order_id' => $order2->id,
+            'tiket_id' => $tiket3->id, // Beli tiket event 2
+            'jumlah' => 1,
+            'subtotal_harga' => 200000
+        ]);
+    }
+}
