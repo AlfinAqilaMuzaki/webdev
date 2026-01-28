@@ -16,8 +16,7 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Buat User (Admin & User Biasa)
-        // User ID 1 = Admin (Pembuat Event)
+
         $admin = User::create([
             'name' => 'Admin',
             'email' => 'admin@gmail.com',
@@ -26,7 +25,6 @@ class DatabaseSeeder extends Seeder
             'no_hp' => '081234567890'
         ]);
 
-        // User ID 2 = User Pembeli (Yang melakukan Order)
         $user = User::create([
             'name' => 'User Customer',
             'email' => 'user@gmail.com',
@@ -35,10 +33,10 @@ class DatabaseSeeder extends Seeder
             'no_hp' => '089876543210'
         ]);
 
-        // 2. Buat Kategori
         $catMusik = Kategori::create(['nama' => 'Musik']);
         $catSeni = Kategori::create(['nama' => 'Seni']);
         $catFestival = Kategori::create(['nama' => 'Festival']);
+<<<<<<< HEAD
         // Note: Di screenshot ada 'Workshop', mungkin itu kategori ke-4, tapi kita pakai 3 ini dulu sesuai event.
 
         // 2.5 Buat Lokasi (Sesuai Soal)
@@ -48,6 +46,9 @@ class DatabaseSeeder extends Seeder
 
         // 3. Buat Event (Sesuai Screenshot Modul)
         // Event ID 1
+=======
+   
+>>>>>>> 3173d0a982039fa9be2d8587a2188fe72084b68d
         $event1 = Event::create([
             'user_id' => $admin->id,
             'kategori_id' => $catMusik->id,
@@ -59,7 +60,6 @@ class DatabaseSeeder extends Seeder
             'gambar' => 'events/konser_rock.jpg'
         ]);
 
-        // Event ID 2
         $event2 = Event::create([
             'user_id' => $admin->id,
             'kategori_id' => $catSeni->id,
@@ -71,7 +71,6 @@ class DatabaseSeeder extends Seeder
             'gambar' => 'events/pameran_seni.jpg'
         ]);
 
-        // Event ID 3
         $event3 = Event::create([
             'user_id' => $admin->id,
             'kategori_id' => $catFestival->id,
@@ -83,8 +82,7 @@ class DatabaseSeeder extends Seeder
             'gambar' => 'events/festival_makanan.jpg'
         ]);
 
-        // 4. Buat Tiket (Sesuai Screenshot Modul)
-        // Tiket ID 1 (Event 1 - Premium)
+
         $tiket1 = Tiket::create([
             'event_id' => $event1->id,
             'tipe' => 'premium',
@@ -92,7 +90,6 @@ class DatabaseSeeder extends Seeder
             'stok' => 100
         ]);
 
-        // Tiket ID 2 (Event 1 - Reguler)
         Tiket::create([
             'event_id' => $event1->id,
             'tipe' => 'reguler',
@@ -100,7 +97,6 @@ class DatabaseSeeder extends Seeder
             'stok' => 500
         ]);
 
-        // Tiket ID 3 (Event 2 - Premium)
         $tiket3 = Tiket::create([
             'event_id' => $event2->id,
             'tipe' => 'premium',
@@ -108,7 +104,6 @@ class DatabaseSeeder extends Seeder
             'stok' => 300
         ]);
 
-        // Tiket ID 4 (Event 3 - Premium)
         Tiket::create([
             'event_id' => $event3->id,
             'tipe' => 'premium',
@@ -116,33 +111,29 @@ class DatabaseSeeder extends Seeder
             'stok' => 200
         ]);
 
-        // 5. Buat Order (Sesuai Screenshot Modul)
-        // Order ID 1: User 2 beli Tiket Event 1
+ 
         $order1 = Order::create([
             'user_id' => $user->id,
             'event_id' => $event1->id,
             'order_date' => '2024-07-01 14:30:00',
             'total_harga' => 1500000
         ]);
-        // Detail Order 1
         DetailOrder::create([
             'order_id' => $order1->id,
-            'tiket_id' => $tiket1->id, // Beli tiket premium event 1
+            'tiket_id' => $tiket1->id, 
             'jumlah' => 1,
             'subtotal_harga' => 1500000
         ]);
 
-        // Order ID 2: User 2 beli Tiket Event 2
         $order2 = Order::create([
             'user_id' => $user->id,
             'event_id' => $event2->id,
             'order_date' => '2024-07-02 10:15:00',
             'total_harga' => 200000
         ]);
-        // Detail Order 2
         DetailOrder::create([
             'order_id' => $order2->id,
-            'tiket_id' => $tiket3->id, // Beli tiket event 2
+            'tiket_id' => $tiket3->id, 
             'jumlah' => 1,
             'subtotal_harga' => 200000
         ]);
