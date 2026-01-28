@@ -6,23 +6,27 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Tiket;
 use App\Models\Event;
-  // Tambahkan ini juga, pasti nanti butuh
+
 class TiketController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * Redirect ke halaman events karena tiket dikelola per-event
      */
     public function index()
     {
-        //
+        return redirect()->route('admin.events.index')
+            ->with('info', 'Tiket dikelola melalui halaman detail event.');
     }
 
     /**
      * Show the form for creating a new resource.
+     * Redirect ke halaman events karena tiket dibuat dari detail event
      */
     public function create()
     {
-        //
+        return redirect()->route('admin.events.index')
+            ->with('info', 'Tambah tiket melalui halaman detail event.');
     }
 
     /**
@@ -30,9 +34,9 @@ class TiketController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = request()->validate([
+        $validatedData = $request->validate([
             'event_id' => 'required|exists:events,id',
-            'tipe' => 'required|string|max:255',
+            'tipe' => 'required|in:reguler,premium',
             'harga' => 'required|numeric|min:0',
             'stok' => 'required|integer|min:0',
         ]);
@@ -40,23 +44,28 @@ class TiketController extends Controller
         // Create the ticket
         Tiket::create($validatedData);
 
-        return redirect()->route('admin.events.show', $validatedData['event_id'])->with('success', 'Ticket berhasil ditambahkan.');
+        return redirect()->route('admin.events.show', $validatedData['event_id'])
+            ->with('success', 'Tiket berhasil ditambahkan.');
     }
 
     /**
      * Display the specified resource.
+     * Redirect ke halaman detail event
      */
     public function show(string $id)
     {
-        //
+        $tiket = Tiket::findOrFail($id);
+        return redirect()->route('admin.events.show', $tiket->event_id);
     }
 
     /**
      * Show the form for editing the specified resource.
+     * Redirect ke halaman detail event karena edit via modal
      */
     public function edit(string $id)
     {
-        //
+        $tiket = Tiket::findOrFail($id);
+        return redirect()->route('admin.events.show', $tiket->event_id);
     }
 
     /**
@@ -64,17 +73,23 @@ class TiketController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $ticket = Tiket::findOrFail($id);
+        try {
+            $ticket = Tiket::findOrFail($id);
 
-        $validatedData = $request->validate([
-            'tipe' => 'required|string|max:255',
-            'harga' => 'required|numeric|min:0',
-            'stok' => 'required|integer|min:0',
-        ]);
+            $validatedData = $request->validate([
+                'tipe' => 'required|in:reguler,premium',
+                'harga' => 'required|numeric|min:0',
+                'stok' => 'required|integer|min:0',
+            ]);
 
-        $ticket->update($validatedData);
+            $ticket->update($validatedData);
 
-        return redirect()->route('admin.events.show', $ticket->event_id)->with('success', 'Ticket berhasil diperbarui.');
+            return redirect()->route('admin.events.show', $ticket->event_id)
+                ->with('success', 'Tiket berhasil diperbarui.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withErrors(['error' => 'Terjadi kesalahan saat memperbarui tiket: ' . $e->getMessage()]);
+        }
     }
 
     /**
@@ -82,10 +97,16 @@ class TiketController extends Controller
      */
     public function destroy(string $id)
     {
-        $ticket = Tiket::findOrFail($id);
-        $eventId = $ticket->event_id;
-        $ticket->delete();
+        try {
+            $ticket = Tiket::findOrFail($id);
+            $eventId = $ticket->event_id;
+            $ticket->delete();
 
-        return redirect()->route('admin.events.show', $eventId)->with('success', 'Ticket berhasil dihapus.');
+            return redirect()->route('admin.events.show', $eventId)
+                ->with('success', 'Tiket berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withErrors(['error' => 'Terjadi kesalahan saat menghapus tiket: ' . $e->getMessage()]);
+        }
     }
 }

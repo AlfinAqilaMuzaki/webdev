@@ -32,13 +32,13 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             
             @forelse($events as $event)
-                <x-user.event-card 
-                    :title="$event->judul" 
-                    :date="$event->tanggal_waktu" 
-                    :location="$event->lokasi"
-                    :price="$event->tikets_min_harga" 
-                    :image="$event->gambar" 
-                    :href="route('events.show', $event)" 
+                <x-user.event-card
+                    :title="$event->judul"
+                    :date="$event->tanggal_waktu"
+                    :location="$event->lokasiRelasi ? $event->lokasiRelasi->nama_lokasi : $event->lokasi"
+                    :price="$event->tikets_min_harga"
+                    :image="$event->gambar"
+                    :href="route('events.show', $event)"
                 />
             @empty
                 <div class="col-span-full text-center py-10">

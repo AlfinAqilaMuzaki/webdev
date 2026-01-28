@@ -13,6 +13,22 @@
                 }, 3000)
             </script>
         @endif
+
+        @if ($errors->any())
+            <div class="toast toast-bottom toast-center z-50">
+                <ul class="alert alert-error">
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+
+            <script>
+                setTimeout(() => {
+                    document.querySelector('.toast')?.remove()
+                }, 5000)
+            </script>
+        @endif
         <div class="card bg-base-100 shadow-sm">
             <div class="card-body">
                 <h2 class="card-title text-2xl mb-6">Detail Event</h2>
@@ -55,7 +71,7 @@
                             <span class="label-text font-semibold">Lokasi</span>
                         </label>
                         <input type="text" name="lokasi" placeholder="Contoh: Stadion Utama"
-                            class="input input-bordered w-full" value="{{ $event->lokasi }}" disabled required />
+                            class="input input-bordered w-full" value="{{ $event->lokasiRelasi ? $event->lokasiRelasi->nama_lokasi : $event->lokasi }}" disabled required />
                     </div>
 
                     <!-- Kategori -->
@@ -118,7 +134,7 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th class="w-1/3">tipe</th>
+                            <th class="w-1/3">Tipe</th>
                             <th>Harga</th>
                             <th>Stok</th>
                             <th>Aksi</th>
@@ -128,8 +144,8 @@
                         @forelse ($tickets as $index => $ticket)
                             <tr>
                                 <th>{{ $index + 1 }}</th>
-                                <td>{{ $ticket->tipe }}</td>
-                                <td>{{ $ticket->harga }}</td>
+                                <td class="capitalize">{{ $ticket->tipe }}</td>
+                                <td>Rp {{ number_format($ticket->harga, 0, ',', '.') }}</td>
                                 <td>{{ $ticket->stok }}</td>
                                 <td>
                                     <button class="btn btn-sm btn-primary mr-2" onclick="openEditModal(this)"

@@ -29,7 +29,17 @@
                     <span class="is-drawer-close:hidden">Manajemen Kategori</span>
                 </a>
             </li>
-            
+
+            <li class="{{ request()->routeIs('admin.lokasis.*') ? 'bg-white shadow rounded-lg' : '' }}">
+                <a href="{{ route('admin.lokasis.index') }}" class="flex gap-4 font-medium" data-tip="Management Lokasi">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    <span class="is-drawer-close:hidden">Management Lokasi</span>
+                </a>
+            </li>
+
             <li class="{{ request()->routeIs('admin.events.*') ? 'bg-white shadow rounded-lg' : '' }}">
                 <a href="{{ route('admin.events.index') }}" class="flex gap-4 font-medium" data-tip="Manajemen Event">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

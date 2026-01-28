@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Kategori;
+use App\Models\Lokasi;
 use App\Models\Event;
 use App\Models\Tiket;
 use App\Models\Order;
@@ -40,11 +41,17 @@ class DatabaseSeeder extends Seeder
         $catFestival = Kategori::create(['nama' => 'Festival']);
         // Note: Di screenshot ada 'Workshop', mungkin itu kategori ke-4, tapi kita pakai 3 ini dulu sesuai event.
 
+        // 2.5 Buat Lokasi (Sesuai Soal)
+        $lokasiStadion = Lokasi::create(['nama_lokasi' => 'Stadion Utama']);
+        $lokasiGaleri = Lokasi::create(['nama_lokasi' => 'Galeri Seni Kota']);
+        $lokasiTaman = Lokasi::create(['nama_lokasi' => 'Taman Kota']);
+
         // 3. Buat Event (Sesuai Screenshot Modul)
         // Event ID 1
         $event1 = Event::create([
             'user_id' => $admin->id,
             'kategori_id' => $catMusik->id,
+            'lokasi_id' => $lokasiStadion->id,
             'judul' => 'Konser Musik Rock',
             'deskripsi' => 'Nikmati malam penuh energi dengan band rock ternama.',
             'lokasi' => 'Stadion Utama',
@@ -56,6 +63,7 @@ class DatabaseSeeder extends Seeder
         $event2 = Event::create([
             'user_id' => $admin->id,
             'kategori_id' => $catSeni->id,
+            'lokasi_id' => $lokasiGaleri->id,
             'judul' => 'Pameran Seni Kontemporer',
             'deskripsi' => 'Jelajahi karya seni modern dari seniman lokal dan internasional.',
             'lokasi' => 'Galeri Seni Kota',
@@ -67,6 +75,7 @@ class DatabaseSeeder extends Seeder
         $event3 = Event::create([
             'user_id' => $admin->id,
             'kategori_id' => $catFestival->id,
+            'lokasi_id' => $lokasiTaman->id,
             'judul' => 'Festival Makanan Internasional',
             'deskripsi' => 'Cicipi berbagai hidangan lezat dari seluruh dunia.',
             'lokasi' => 'Taman Kota',

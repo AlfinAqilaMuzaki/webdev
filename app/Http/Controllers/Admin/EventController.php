@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\Kategori;
+use App\Models\Lokasi;
+
 class EventController extends Controller
 {
     /**
@@ -22,7 +24,8 @@ class EventController extends Controller
     public function create()
     {
         $categories = Kategori::all();
-        return view('admin.event.create', compact('categories'));
+        $lokasis = Lokasi::all();
+        return view('admin.event.create', compact('categories', 'lokasis'));
     }
     /**
      * Store a newly created resource in storage.
@@ -33,7 +36,7 @@ class EventController extends Controller
             'judul' => 'required|string|max:255',
             'deskripsi' => 'required|string',
             'tanggal_waktu' => 'required|date',
-            'lokasi' => 'required|string|max:255',
+            'lokasi_id' => 'required|exists:lokasis,id',
             'kategori_id' => 'required|exists:kategoris,id',
             'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
@@ -46,6 +49,10 @@ class EventController extends Controller
         }
 
         $validatedData['user_id'] = auth()->user()->id ?? null;
+
+        // Set lokasi text from lokasi relation
+        $lokasi = Lokasi::find($validatedData['lokasi_id']);
+        $validatedData['lokasi'] = $lokasi ? $lokasi->nama_lokasi : '';
 
         Event::create($validatedData);
 
@@ -71,7 +78,8 @@ class EventController extends Controller
     {
         $event = Event::findOrFail($id);
         $categories = Kategori::all();
-        return view('admin.event.edit', compact('event', 'categories'));
+        $lokasis = Lokasi::all();
+        return view('admin.event.edit', compact('event', 'categories', 'lokasis'));
     }
 
     /**
@@ -86,7 +94,7 @@ class EventController extends Controller
                 'judul' => 'required|string|max:255',
                 'deskripsi' => 'required|string',
                 'tanggal_waktu' => 'required|date',
-                'lokasi' => 'required|string|max:255',
+                'lokasi_id' => 'required|exists:lokasis,id',
                 'kategori_id' => 'required|exists:kategoris,id',
                 'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
@@ -97,6 +105,10 @@ class EventController extends Controller
                 $request->gambar->move(public_path('images/events'), $imageName);
                 $validatedData['gambar'] = $imageName;
             }
+
+            // Set lokasi text from lokasi relation
+            $lokasi = Lokasi::find($validatedData['lokasi_id']);
+            $validatedData['lokasi'] = $lokasi ? $lokasi->nama_lokasi : '';
 
             $event->update($validatedData);
 

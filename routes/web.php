@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\TiketController;
 use App\Http\Controllers\Admin\HistoriesController;
 use App\Http\Controllers\Admin\TipePembayaranController;
+use App\Http\Controllers\Admin\LokasiController;
 use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\User\EventController as UserEventController;
@@ -33,12 +34,15 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     // Category Management
     Route::resource('categories', CategoryController::class);
 
+    // Lokasi Management
+    Route::resource('lokasis', LokasiController::class);
+
     // Event Management
     Route::resource('events', EventController::class);
 
-    // Ticket Management 
+    // Ticket Management
     Route::resource('tickets', TiketController::class);
-    
+
     // Histories
     Route::get('/histories', [HistoriesController::class, 'index'])->name('histories.index');
     Route::get('/histories/{id}', [HistoriesController::class, 'show'])->name('histories.show');
